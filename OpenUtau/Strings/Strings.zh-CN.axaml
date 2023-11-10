@@ -214,7 +214,6 @@
   <system:String x:Key="pianoroll.menu.notes.addheadap">添加头部"AP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtaildash">添加尾部"-"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtailrest">添加尾部"R"音符</system:String>
-  <system:String x:Key="pianoroll.menu.notes.addtailap">添加尾部"AP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtailsp">添加尾部"SP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.autolegato">自动连奏</system:String>
   <system:String x:Key="pianoroll.menu.notes.bakepitch">将手绘音高转换为锚点音高</system:String>
@@ -226,9 +225,9 @@
   <system:String x:Key="pianoroll.menu.notes.octaveup">上移八度</system:String>
   <system:String x:Key="pianoroll.menu.notes.quantize15">量化至1/128音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.quantize30">量化至1/64音符</system:String>
+  <system:String x:Key="pianoroll.menu.notes.removeheadap">删除头部"AP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.removetaildash">删除尾部"-"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.removetailrest">删除尾部"R"音符</system:String>
-  <system:String x:Key="pianoroll.menu.notes.removetailap">删除尾部"AP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.removetailsp">删除尾部"SP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.reset.exps">重置表情</system:String>
   <system:String x:Key="pianoroll.menu.notes.reset.phonemetimings">重置音素时机</system:String>
