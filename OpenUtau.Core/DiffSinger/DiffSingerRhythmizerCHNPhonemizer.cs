@@ -64,7 +64,7 @@ namespace OpenUtau.Core.DiffSinger {
     }
 
     [Phonemizer("DiffSinger Rhythmizer Mandarin Phonemizer", "DIFF CHN_RHY", "BaiTang",language: "ZH")]
-    public class DiffSingerRhythmizerPhonemizer : MachineLearningPhonemizer {
+    public class DiffSingerRhythmizerCHNPhonemizer : MachineLearningPhonemizer {
         USinger singer;
         DsRhythmizer rhythmizer;
         Dictionary<string, string[]> phoneDict;
