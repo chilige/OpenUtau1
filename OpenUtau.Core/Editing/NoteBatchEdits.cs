@@ -40,6 +40,41 @@ namespace OpenUtau.Core.Editing {
         }
     }
 
+        public class AddHeadNote : BatchEdit {
+        public string Name => name;
+
+        private string lyric;
+        private string name;
+
+        public AddHeadNote(string lyric, string name) {
+            this.lyric = lyric;
+            this.name = name;
+        }
+
+        public void Run(UProject project, UVoicePart part, List<UNote> selectedNotes, DocManager docManager) {
+            List<UNote> toAdd = new List<UNote>();
+            var notes = selectedNotes.Count > 0 ? selectedNotes : part.notes.ToList();
+            foreach (var note in notes) {
+                if (note.lyric != lyric && (note.Prev == null || note.Prev.End < note.position - 120)) {
+                    var addNote = project.CreateNote(note.tone, note.position - 120, 120);
+                    foreach(var exp in note.phonemeExpressions.OrderBy(exp => exp.index)) {
+                        addNote.SetExpression(project, project.tracks[part.trackNo], exp.abbr, new float[] { exp.value });
+                    }
+                    toAdd.Add(addNote);
+                }
+            }
+            if (toAdd.Count == 0) {
+                return;
+            }
+            docManager.StartUndoGroup(true);
+            foreach (var note in toAdd) {
+                note.lyric = lyric;
+                docManager.ExecuteCmd(new AddNoteCommand(part, note));
+            }
+            docManager.EndUndoGroup();
+        }
+    }
+
     public class RemoveTailNote : BatchEdit {
         public string Name => name;
 

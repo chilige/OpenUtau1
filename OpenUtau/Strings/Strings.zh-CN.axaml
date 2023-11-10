@@ -211,6 +211,7 @@
   <system:String x:Key="pianoroll.menu.notedefaults">音符设置</system:String>
   <system:String x:Key="pianoroll.menu.noteproperty">音符属性</system:String>
   <system:String x:Key="pianoroll.menu.notes">音符</system:String>
+  <system:String x:Key="pianoroll.menu.notes.addheadap">添加头部"AP"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtaildash">添加尾部"-"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtailrest">添加尾部"R"音符</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtailap">添加尾部"AP"音符</system:String>
