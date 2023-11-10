@@ -59,6 +59,8 @@ namespace OpenUtau.Core.DiffSinger {
                 string path = Path.Combine(singer.Location, "rhy_map.txt");
                 this.rhyMapDict = LoadRhyMap(path);
             } catch (Exception ex) {
+                Log.Information("rhy_map加载失败");
+                Log.Information(ex.StackTrace);
                 return;
             }
         }

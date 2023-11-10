@@ -113,6 +113,7 @@ namespace OpenUtau.Core.DiffSinger {
                     try {
                         phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
                     } catch (Exception ex) {
+                        Log.Information(elements[0].Trim()+"的音素无法注入 请确认是否重复或内容异常");
                         Log.Information(ex.StackTrace);
                         err = 1;
                         continue;
@@ -135,6 +136,7 @@ namespace OpenUtau.Core.DiffSinger {
                         phoneDict.Add(elements[0].Trim(), elements[1].Trim());
                     } catch (Exception ex) {
                         err = 1;
+                        Log.Information(elements[0].Trim()+"的map无法注入 请确认是否重复或内容异常");
                         Log.Information(ex.StackTrace);
                         continue;
                     }
