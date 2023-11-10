@@ -8,7 +8,7 @@ using WanaKanaNet;
 namespace OpenUtau.Core {
     public abstract class BaseJapanesePhonemizer : Phonemizer {
         public static bool IsHanzi(string lyric) {
-            return lyric.Length == 1 && Regex.IsMatch(lyric, "[ぁ-んァ-ヴ]");
+            return lyric.Length <= 2 && Regex.IsMatch(lyric, "[ぁ-んァ-ヴ]");
         }
 
         public static Note[] ChangeLyric(Note[] group, string lyric) {
@@ -26,12 +26,12 @@ namespace OpenUtau.Core {
 
         public static string[] Romanize(IEnumerable<string> lyrics) {
             var lyricsArray = lyrics.ToArray();
-            var hanziLyrics = String.Join("", lyricsArray
+            var hanziLyrics = String.Join(" ", lyricsArray
                 .Where(IsHanzi));
-            var pinyinResult = WordsHelper.GetPinyin(hanziLyrics, " ").ToLower().Split();
+            var pinyinResult = WanaKana.ToRomaji(hanziLyrics).ToLower().Split();
             var pinyinIndex = 0;
             for(int i=0; i < lyricsArray.Length; i++) {
-                if (lyricsArray[i].Length == 1 && Regex.IsMatch(lyricsArray[i], "[ぁ-んァ-ヴ]")) {
+                if (lyricsArray[i].Length <= 2 && Regex.IsMatch(lyricsArray[i], "[ぁ-んァ-ヴ]")) {
                     lyricsArray[i] = pinyinResult[pinyinIndex];
                     pinyinIndex++;
                 }
