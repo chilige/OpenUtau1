@@ -7,6 +7,8 @@ using OpenUtau.Api;
 using OpenUtau.Core.Ustx;
 using System.Text;
 using System.Linq;
+using Serilog;
+using Newtonsoft.Json;
 
 namespace OpenUtau.Core.DiffSinger {
 
@@ -111,6 +113,9 @@ namespace OpenUtau.Core.DiffSinger {
             phAlignPoints.Add(new Tuple<int, double>(
                 phonemes.Count,
                 timeAxis.TickPosToMsPos(lastNote.position + lastNote.duration) / 1000));
+
+            Log.Information(JsonConvert.SerializeObject(phonemes));
+            Log.Information(JsonConvert.SerializeObject(realPhonemes));
 
             //Call Diffsinger phoneme timing model
             //ph_dur = session.run(['ph_dur'], {'tokens': tokens, 'midi': midi, 'midi_dur': midi_dur, 'is_slur': is_slur})[0]

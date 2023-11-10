@@ -7,6 +7,8 @@ using OpenUtau.Api;
 using OpenUtau.Core.Ustx;
 using System.Text;
 using System.Linq;
+using Serilog;
+using Newtonsoft.Json;
 
 namespace OpenUtau.Core.DiffSinger {
 
@@ -102,24 +104,44 @@ namespace OpenUtau.Core.DiffSinger {
             }
         }
 
-        public static Dictionary<string, string[]> LoadDsDict(string path) {
+        public Dictionary<string, string[]> LoadDsDict(string path) {
+            var err = 0;
             var phoneDict = new Dictionary<string, string[]>();
             if (File.Exists(path)) {
                 foreach (string line in File.ReadLines(path, System.Text.Encoding.UTF8)) {
                     string[] elements = line.Split(",");
-                    phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
+                    try {
+                        phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
+                    } catch (Exception ex) {
+                        Log.Information(ex.StackTrace);
+                        err = 1;
+                        continue;
+                    }
                 }
+            }
+            if (err == 1) {
+                Log.Information(JsonConvert.SerializeObject(phoneDict));
             }
             return phoneDict;
         }
 
-        public static Dictionary<string, string> LoadRhyMap(string path) {
+        public Dictionary<string, string> LoadRhyMap(string path) {
+            var err = 0;
             var phoneDict = new Dictionary<string, string>();
             if (File.Exists(path)) {
                 foreach (string line in File.ReadLines(path, System.Text.Encoding.UTF8)) {
                     string[] elements = line.Split(",");
-                    phoneDict.Add(elements[0].Trim(), elements[1].Trim());
+                    try {
+                        phoneDict.Add(elements[0].Trim(), elements[1].Trim());
+                    } catch (Exception ex) {
+                        err = 1;
+                        Log.Information(ex.StackTrace);
+                        continue;
+                    }
                 }
+            }
+            if (err == 1) {
+                Log.Information(JsonConvert.SerializeObject(phoneDict));
             }
             return phoneDict;
         }
