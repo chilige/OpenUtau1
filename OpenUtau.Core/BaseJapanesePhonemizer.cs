@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using OpenUtau.Api;
-using ToolGood.Words.Pinyin;
+using WanaKanaNet;
 
 namespace OpenUtau.Core {
     public abstract class BaseJapanesePhonemizer : Phonemizer {
@@ -31,7 +31,7 @@ namespace OpenUtau.Core {
             var pinyinResult = WordsHelper.GetPinyin(hanziLyrics, " ").ToLower().Split();
             var pinyinIndex = 0;
             for(int i=0; i < lyricsArray.Length; i++) {
-                if (lyricsArray[i].Length == 1 && WordsHelper.IsAllChinese(lyricsArray[i])) {
+                if (lyricsArray[i].Length == 1 && Regex.IsMatch(lyricsArray[i], "[ぁ-んァ-ヴ]")) {
                     lyricsArray[i] = pinyinResult[pinyinIndex];
                     pinyinIndex++;
                 }
