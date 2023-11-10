@@ -10,65 +10,8 @@ using System.Linq;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    //Config file for rhythmizer
-    [Serializable]
-    public class DsBaseRhythmizerConfig {
-        public string name = "rhythmizer";
-        public string model = "model.onnx";
-        public string phonemes = "phonemes.txt";
-    }
-
-    //Declaration file in the voicebank for which rhythmizer to use
-    [Serializable]
-    public class DsBaseRhythmizerYaml {
-        public string rhythmizer = DsBaseRhythmizer.DefaultRhythmizer;
-    }
-
-    public class DsBaseRhythmizer {
-        public string Location;
-        public DsBaseRhythmizerConfig config;
-        public InferenceSession session;
-        public Dictionary<string, string[]> phoneDict;
-        public List<string> phonemes = new List<string>();
-        //Default rhythmizer package name
-        public static string DefaultRhythmizer = "rhythmizer_zh_opencpop_strict";
-
-        public static Dictionary<string, string[]> LoadPhoneDict(string path, Encoding TextFileEncoding) {
-            var phoneDict = new Dictionary<string, string[]>();
-            if (File.Exists(path)) {
-                foreach (string line in File.ReadLines(path, TextFileEncoding)) {
-                    string[] elements = line.Split("\t");
-                    phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
-                }
-            }
-            return phoneDict;
-        }
-
-        //Get rhythmizer using package name
-        public static DsBaseRhythmizer FromName(string name) {
-            var path = Path.Combine(PathManager.Inst.DependencyPath, name);
-            return new DsBaseRhythmizer(path);
-        }
-
-        public DsBaseRhythmizer(string path) {
-            this.Location = path;
-            config = Core.Yaml.DefaultDeserializer.Deserialize<DsBaseRhythmizerConfig>(
-                File.ReadAllText(Path.Combine(Location, "vocoder.yaml"),
-                    System.Text.Encoding.UTF8));
-            phoneDict = LoadPhoneDict(Path.Combine(Location, "dsdict.txt"), Encoding.UTF8);
-            //Load phoneme set
-            string phonemesPath = Path.Combine(Location, config.phonemes);
-            phonemes = File.ReadLines(phonemesPath, Encoding.UTF8).ToList();
-            session = new InferenceSession(Path.Combine(Location, config.model));
-        }
-    }
-
-    public abstract class DiffSingerRhythmizerBasePhonemizer : MachineLearningPhonemizer {
-        public USinger singer;
-        public DsBaseRhythmizer rhythmizer;
-        public Dictionary<string, string[]> phoneDict;
-        public Dictionary<string, string[]> realPhnDict;
-        public Dictionary<string, string> rhyMapDict;
+    [Phonemizer("DiffSinger Rhythmizer Japanese Phonemizer", "DIFFS JPN-RHY", "BaiTang", language: "JA")]
+    public class DiffSingerRhythmizerJPNPhonemizer : DiffSingerRhythmizerBasePhonemizer {
 
         public override void SetSinger(USinger singer) {
             if (this.singer == singer) {
@@ -100,60 +43,30 @@ namespace OpenUtau.Core.DiffSinger {
             } catch (Exception ex) {
                 return;
             }
-        }
 
-        public static Dictionary<string, string[]> LoadDsDict(string path) {
-            var phoneDict = new Dictionary<string, string[]>();
-            if (File.Exists(path)) {
-                foreach (string line in File.ReadLines(path, System.Text.Encoding.UTF8)) {
-                    string[] elements = line.Split(",");
-                    phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
-                }
-            }
-            return phoneDict;
-        }
-
-        public static Dictionary<string, string> LoadRhyMap(string path) {
-            var phoneDict = new Dictionary<string, string>();
-            if (File.Exists(path)) {
-                foreach (string line in File.ReadLines(path, System.Text.Encoding.UTF8)) {
-                    string[] elements = line.Split(",");
-                    phoneDict.Add(elements[0].Trim(), elements[1].Trim());
-                }
-            }
-            return phoneDict;
-        }
-
-        public string GetSimilarPhoneme(string phn) {
+            //LoadJpnPhoneDict
             try {
-                if (this.rhythmizer.phonemes.Contains(phn)) {
-                    return phn;
-                } else if (this.rhyMapDict.ContainsKey(phn)) {
-                    return rhyMapDict[phn];
-                } else {
-                    return phn;
-                }
-            } catch (Exception) {
-                return phn;
+                string path = Path.Combine(singer.Location, "ds_JPN.txt");
+                this.realPhnDict = LoadDsDict(path);
+            } catch (Exception ex) {
+                return;
+            }
+
+            //LoadRhyMap
+            try {
+                string path = Path.Combine(singer.Location, "rhy_map.txt");
+                this.rhyMapDict = LoadRhyMap(path);
+            } catch (Exception ex) {
+                return;
             }
         }
 
-        public string[] GetSimilarPhonemes(string[] phns) {
-            try {
-                string[] similarPhnList = { };
-                foreach (string phn in phns) {
-                    similarPhnList.Append(GetSimilarPhoneme(phn));
-                }
-                return similarPhnList;
-            } catch (Exception) {
-                return phns;
-            }
-        }
         //Run timing model for a sentence
         //Slur notes are merged into the lyrical note before it to prevent shortening of consonants due to short slur
         protected override void ProcessPart(Note[][] phrase) {
             float padding = 0.5f;//Padding time for consonants at the beginning of a sentence
             var phonemes = new List<string> { "SP" };
+            var realPhonemes = new List<string> { "SP" };
             var midi = new List<long> { 0 };//Phoneme pitch
             var midi_dur = new List<float> { padding };//List of parent note duration for each phoneme
             var is_slur = new List<bool> { false };//Whether the phoneme is slur
@@ -165,17 +78,21 @@ namespace OpenUtau.Core.DiffSinger {
             //Convert note list to phoneme list
             foreach (int groupIndex in Enumerable.Range(0, phrase.Length)) {
                 string[] notePhonemes;
+                string[] realNotePhonemes;
                 Note[] group = phrase[groupIndex];
                 if (group[0].phoneticHint is null) {
                     var lyric = group[0].lyric;
 
-                    if (phoneDict.ContainsKey(lyric)) {
-                        notePhonemes = phoneDict[lyric];
+                    if (realPhnDict.ContainsKey(lyric)) {
+                        realNotePhonemes = realPhnDict[lyric];
+                        notePhonemes = GetSimilarPhonemes(realNotePhonemes);
                     } else {
+                        realNotePhonemes = new string[] { lyric };
                         notePhonemes = new string[] { lyric };
                     }
                 } else {
-                    notePhonemes = group[0].phoneticHint.Split(" ");
+                    realNotePhonemes = group[0].phoneticHint.Split(" ");
+                    notePhonemes = GetSimilarPhonemes(realNotePhonemes);
                 }
                 is_slur.AddRange(Enumerable.Repeat(false, notePhonemes.Length));
                 phAlignPoints.Add(new Tuple<int, double>(
@@ -183,6 +100,7 @@ namespace OpenUtau.Core.DiffSinger {
                     timeAxis.TickPosToMsPos(group[0].position) / 1000
                     ));
                 phonemes.AddRange(notePhonemes);
+                realPhonemes.AddRange(realNotePhonemes);
                 midi.AddRange(Enumerable.Repeat((long)group[0].tone, notePhonemes.Length));
                 notePhIndex.Add(phonemes.Count);
 
@@ -242,31 +160,16 @@ namespace OpenUtau.Core.DiffSinger {
                 }
                 double notePos = timeAxis.TickPosToMsPos(group[0].position);//音符起点位置，单位ms
                 for (int phIndex = notePhIndex[groupIndex]; phIndex < notePhIndex[groupIndex + 1]; ++phIndex) {
-                    noteResult.Add(Tuple.Create(phonemes[phIndex], timeAxis.TicksBetweenMsPos(
+                    noteResult.Add(Tuple.Create(realPhonemes[phIndex], timeAxis.TicksBetweenMsPos(
                        notePos, positions[phIndex] * 1000)));
                 }
                 partResult[group[0].position] = noteResult;
             }
         }
 
-        public static IEnumerable<double> CumulativeSum(IEnumerable<double> sequence, double start = 0) {
-            double sum = start;
-            foreach (var item in sequence) {
-                sum += item;
-                yield return sum;
-            }
-        }
-
-        //Stretch phoneme duration sequence with a certain ratio
-        public List<double> stretch(IList<double> source, double ratio, double endPos) {
-            //source: phoneme duration sequence, unit: s
-            //ratio：scaling ratio
-            //endPos: target end time, unit: s
-            //output: scaled phoneme position, unit: s
-            double startPos = endPos - source.Sum() * ratio;
-            var result = CumulativeSum(source.Select(x => x * ratio).Prepend(0), startPos).ToList();
-            result.RemoveAt(result.Count - 1);
-            return result;
+        protected override string[] Romanize(IEnumerable<string> lyrics) {
+            return BaseJapanesePhonemizer.Romanize(lyrics);
         }
     }
+
 }
