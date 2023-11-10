@@ -7,7 +7,6 @@ using OpenUtau.Api;
 using OpenUtau.Core.Ustx;
 using System.Text;
 using System.Linq;
-using Serilog;
 
 namespace OpenUtau.Core.DiffSinger {
 
@@ -50,7 +49,6 @@ namespace OpenUtau.Core.DiffSinger {
                 string path = Path.Combine(singer.Location, "ds_JPN.txt");
                 this.realPhnDict = LoadDsDict(path);
             } catch (Exception ex) {
-                Log.Warning(ex.ToString());
                 return;
             }
 
@@ -59,7 +57,6 @@ namespace OpenUtau.Core.DiffSinger {
                 string path = Path.Combine(singer.Location, "rhy_map.txt");
                 this.rhyMapDict = LoadRhyMap(path);
             } catch (Exception ex) {
-                Log.Warning(ex.ToString());
                 return;
             }
         }
@@ -118,8 +115,6 @@ namespace OpenUtau.Core.DiffSinger {
             //Call Diffsinger phoneme timing model
             //ph_dur = session.run(['ph_dur'], {'tokens': tokens, 'midi': midi, 'midi_dur': midi_dur, 'is_slur': is_slur})[0]
             //error phonemes are replaced with SP
-            Log.Information(phonemes.ToString());
-            Log.Information(realPhonemes.ToString());
             long defaultToken = rhythmizer.phonemes.IndexOf("SP");
             var tokens = phonemes
                 .Select(x => (long)(rhythmizer.phonemes.IndexOf(x)))
@@ -165,7 +160,7 @@ namespace OpenUtau.Core.DiffSinger {
                 }
                 double notePos = timeAxis.TickPosToMsPos(group[0].position);//音符起点位置，单位ms
                 for (int phIndex = notePhIndex[groupIndex]; phIndex < notePhIndex[groupIndex + 1]; ++phIndex) {
-                    noteResult.Add(Tuple.Create(phonemes[phIndex], timeAxis.TicksBetweenMsPos(
+                    noteResult.Add(Tuple.Create(realPhonemes[phIndex], timeAxis.TicksBetweenMsPos(
                        notePos, positions[phIndex] * 1000)));
                 }
                 partResult[group[0].position] = noteResult;
