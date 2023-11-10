@@ -63,7 +63,7 @@ namespace OpenUtau.Core.DiffSinger {
         }
     }
 
-    public class DiffSingerRhythmizerBasePhonemizer : MachineLearningPhonemizer {
+    public abstract class DiffSingerRhythmizerBasePhonemizer : MachineLearningPhonemizer {
         USinger singer;
         DsBaseRhythmizer rhythmizer;
         Dictionary<string, string[]> phoneDict;
