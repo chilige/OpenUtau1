@@ -1,12 +1,5 @@
-using System;
 using System.Collections.Generic;
-using Microsoft.ML.OnnxRuntime;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using System.IO;
 using OpenUtau.Api;
-using OpenUtau.Core.Ustx;
-using System.Text;
-using System.Linq;
 
 namespace OpenUtau.Core.DiffSinger {
 
@@ -16,5 +9,5 @@ namespace OpenUtau.Core.DiffSinger {
             return BaseChinesePhonemizer.Romanize(lyrics);
         }
     }
-    
+
 }
