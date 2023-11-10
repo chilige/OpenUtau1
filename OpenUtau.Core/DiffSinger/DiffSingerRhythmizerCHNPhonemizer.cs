@@ -11,62 +11,62 @@ using System.Linq;
 namespace OpenUtau.Core.DiffSinger {
 
     //Config file for rhythmizer
-    // [Serializable]
-    // public class DsRhythmizerConfig {
-    //     public string name = "rhythmizer";
-    //     public string model = "model.onnx";
-    //     public string phonemes = "phonemes.txt";
-    // }
+    [Serializable]
+    public class DsBaseRhythmizerConfig {
+        public string name = "rhythmizer";
+        public string model = "model.onnx";
+        public string phonemes = "phonemes.txt";
+    }
 
-    // //Declaration file in the voicebank for which rhythmizer to use
-    // [Serializable]
-    // public class DsRhythmizerYaml {
-    //     public string rhythmizer = DsRhythmizer.DefaultRhythmizer;
-    // }
+    //Declaration file in the voicebank for which rhythmizer to use
+    [Serializable]
+    public class DsBaseRhythmizerYaml {
+        public string rhythmizer = DsBaseRhythmizer.DefaultRhythmizer;
+    }
 
-    // class DsRhythmizer {
-    //     public string Location;
-    //     public DsRhythmizerConfig config;
-    //     public InferenceSession session;
-    //     public Dictionary<string, string[]> phoneDict;
-    //     public List<string> phonemes = new List<string>();
-    //     //Default rhythmizer package name
-    //     public static string DefaultRhythmizer = "rhythmizer_zh_opencpop_strict";
+    class DsBaseRhythmizer {
+        public string Location;
+        public DsBaseRhythmizerConfig config;
+        public InferenceSession session;
+        public Dictionary<string, string[]> phoneDict;
+        public List<string> phonemes = new List<string>();
+        //Default rhythmizer package name
+        public static string DefaultRhythmizer = "rhythmizer_zh_opencpop_strict";
 
-    //     public static Dictionary<string, string[]> LoadPhoneDict(string path, Encoding TextFileEncoding) {
-    //         var phoneDict = new Dictionary<string, string[]>();
-    //         if (File.Exists(path)) {
-    //             foreach (string line in File.ReadLines(path, TextFileEncoding)) {
-    //                 string[] elements = line.Split("\t");
-    //                 phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
-    //             }
-    //         }
-    //         return phoneDict;
-    //     }
+        public static Dictionary<string, string[]> LoadPhoneDict(string path, Encoding TextFileEncoding) {
+            var phoneDict = new Dictionary<string, string[]>();
+            if (File.Exists(path)) {
+                foreach (string line in File.ReadLines(path, TextFileEncoding)) {
+                    string[] elements = line.Split("\t");
+                    phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
+                }
+            }
+            return phoneDict;
+        }
 
-    //     //Get rhythmizer using package name
-    //     public static DsRhythmizer FromName(string name) {
-    //         var path = Path.Combine(PathManager.Inst.DependencyPath, name);
-    //         return new DsRhythmizer(path);
-    //     }
+        //Get rhythmizer using package name
+        public static DsBaseRhythmizer FromName(string name) {
+            var path = Path.Combine(PathManager.Inst.DependencyPath, name);
+            return new DsBaseRhythmizer(path);
+        }
 
-    //     public DsRhythmizer(string path) {
-    //         this.Location = path;
-    //         config = Core.Yaml.DefaultDeserializer.Deserialize<DsRhythmizerConfig>(
-    //             File.ReadAllText(Path.Combine(Location, "vocoder.yaml"),
-    //                 System.Text.Encoding.UTF8));
-    //         phoneDict = LoadPhoneDict(Path.Combine(Location, "dsdict.txt"), Encoding.UTF8);
-    //         //Load phoneme set
-    //         string phonemesPath = Path.Combine(Location, config.phonemes);
-    //         phonemes = File.ReadLines(phonemesPath, Encoding.UTF8).ToList();
-    //         session = new InferenceSession(Path.Combine(Location, config.model));
-    //     }
-    // }
+        public DsBaseRhythmizer(string path) {
+            this.Location = path;
+            config = Core.Yaml.DefaultDeserializer.Deserialize<DsBaseRhythmizerConfig>(
+                File.ReadAllText(Path.Combine(Location, "vocoder.yaml"),
+                    System.Text.Encoding.UTF8));
+            phoneDict = LoadPhoneDict(Path.Combine(Location, "dsdict.txt"), Encoding.UTF8);
+            //Load phoneme set
+            string phonemesPath = Path.Combine(Location, config.phonemes);
+            phonemes = File.ReadLines(phonemesPath, Encoding.UTF8).ToList();
+            session = new InferenceSession(Path.Combine(Location, config.model));
+        }
+    }
 
-    [Phonemizer("DiffSinger Rhythmizer Mandarin Phonemizer", "DIFF CHN_RHY", "BaiTang",language: "ZH")]
+    [Phonemizer("DiffSinger Rhythmizer Mandarin Phonemizer", "DIFFS CHN-RHY", "BaiTang",language: "ZH")]
     public class DiffSingerRhythmizerCHNPhonemizer : MachineLearningPhonemizer {
         USinger singer;
-        DsRhythmizer rhythmizer;
+        DsBaseRhythmizer rhythmizer;
         Dictionary<string, string[]> phoneDict;
         
         public override void SetSinger(USinger singer) {
@@ -82,17 +82,17 @@ namespace OpenUtau.Core.DiffSinger {
                 //if rhythmizer is packed within the voicebank
                 var packedRhythmizerPath = Path.Combine(singer.Location, "rhythmizer");
                 if(Directory.Exists(packedRhythmizerPath)) {
-                    rhythmizer = new DsRhythmizer(packedRhythmizerPath);
+                    rhythmizer = new DsBaseRhythmizer(packedRhythmizerPath);
                 } else { 
                     string rhythmizerName;
                     string rhythmizerYamlPath = Path.Combine(singer.Location, "dsrhythmizer.yaml");
                     if (File.Exists(rhythmizerYamlPath)) {
-                        rhythmizerName = Core.Yaml.DefaultDeserializer.Deserialize<DsRhythmizerYaml>(
+                        rhythmizerName = Core.Yaml.DefaultDeserializer.Deserialize<DsBaseRhythmizerYaml>(
                             File.ReadAllText(rhythmizerYamlPath, singer.TextFileEncoding)).rhythmizer;
                     } else {
-                        rhythmizerName = DsRhythmizer.DefaultRhythmizer;
+                        rhythmizerName = DsBaseRhythmizer.DefaultRhythmizer;
                     }
-                        rhythmizer = DsRhythmizer.FromName(rhythmizerName);
+                        rhythmizer = DsBaseRhythmizer.FromName(rhythmizerName);
                 }
                 //Load pinyin to phoneme dictionary from rhythmizer package
                 phoneDict = rhythmizer.phoneDict;
