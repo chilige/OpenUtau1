@@ -175,6 +175,7 @@ namespace OpenUtau.App.ViewModels {
             LyricBatchEdits.AddRange(new List<BatchEdit>() {
                 new RomajiToHiragana(),
                 new HiraganaToRomaji(),
+                new HanziToCantonese(),
                 new JapaneseVCVtoCV(),
                 new RemoveToneSuffix(),
                 new RemoveLetterSuffix(),
