@@ -3,7 +3,7 @@ using OpenUtau.Api;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Rhythmizer Mandarin Phonemizer", "DIFFS CHN-RHY", "BaiTang",language: "ZH")]
+    [Phonemizer("DiffSinger Mandarin RHY Phonemizer", "DIFFS CHN-RHY", "BaiTang",language: "ZH")]
     public class DiffSingerRhythmizerCHNPhonemizer : DiffSingerRhythmizerBasePhonemizer {
         protected override string[] Romanize(IEnumerable<string> lyrics) {
             return BaseChinesePhonemizer.Romanize(lyrics);
