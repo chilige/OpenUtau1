@@ -137,19 +137,19 @@ namespace OpenUtau.App.ViewModels {
 
             noteBatchEditCommand = ReactiveCommand.Create<BatchEdit>(edit => {
                 if (NotesViewModel.Part != null) {
-                    try{
+                    try {
                         edit.Run(NotesViewModel.Project, NotesViewModel.Part, NotesViewModel.Selection.ToList(), DocManager.Inst);
-                    }catch(System.Exception e){
-                        DocManager.Inst.ExecuteCmd(new ErrorMessageNotification("Failed to run editing macro",e));
+                    } catch (System.Exception e) {
+                        DocManager.Inst.ExecuteCmd(new ErrorMessageNotification("Failed to run editing macro", e));
                     }
                 }
             });
             NoteBatchEdits.AddRange(new List<BatchEdit>() {
                 new LoadRenderedPitch(),
-                new AddHeadNote("AP", "pianoroll.menu.notes.addheadap"),
-                new AddTailNote("-", "pianoroll.menu.notes.addtaildash"),
-                new AddTailNote("R", "pianoroll.menu.notes.addtailrest"),
-                new AddTailNote("SP", "pianoroll.menu.notes.addtailsp"),
+                new AddHeadNote("AP", "pianoroll.menu.notes.addheadap", 360),
+                new AddTailNote("-", "pianoroll.menu.notes.addtaildash", 120),
+                new AddTailNote("R", "pianoroll.menu.notes.addtailrest", 120),
+                new AddTailNote("SP", "pianoroll.menu.notes.addtailsp", 240),
                 new RemoveHeadNote("AP", "pianoroll.menu.notes.removeheadap"),
                 new RemoveTailNote("-", "pianoroll.menu.notes.removetaildash"),
                 new RemoveTailNote("R", "pianoroll.menu.notes.removetailrest"),

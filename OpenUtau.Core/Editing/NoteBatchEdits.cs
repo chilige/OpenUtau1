@@ -12,11 +12,13 @@ namespace OpenUtau.Core.Editing
 
         private string lyric;
         private string name;
+        private int len;
 
-        public AddTailNote(string lyric, string name)
+        public AddTailNote(string lyric, string name, int len)
         {
             this.lyric = lyric;
             this.name = name;
+            this.len = len;
         }
 
         public void Run(UProject project, UVoicePart part, List<UNote> selectedNotes, DocManager docManager)
@@ -25,9 +27,9 @@ namespace OpenUtau.Core.Editing
             var notes = selectedNotes.Count > 0 ? selectedNotes : part.notes.ToList();
             foreach (var note in notes)
             {
-                if (note.lyric != lyric && (note.Next == null || note.Next.position > note.End + 120))
+                if (note.lyric != lyric && (note.Next == null || note.Next.position > note.End + len))
                 {
-                    var addNote = project.CreateNote(note.tone, note.End, 120);
+                    var addNote = project.CreateNote(note.tone, note.End, len);
                     foreach (var exp in note.phonemeExpressions.OrderBy(exp => exp.index))
                     {
                         addNote.SetExpression(project, project.tracks[part.trackNo], exp.abbr, new float[] { exp.value });
@@ -55,11 +57,13 @@ namespace OpenUtau.Core.Editing
 
         private string lyric;
         private string name;
+        private int len;
 
-        public AddHeadNote(string lyric, string name)
+        public AddHeadNote(string lyric, string name, int len)
         {
             this.lyric = lyric;
             this.name = name;
+            this.len = len;
         }
 
         public void Run(UProject project, UVoicePart part, List<UNote> selectedNotes, DocManager docManager)
@@ -68,9 +72,9 @@ namespace OpenUtau.Core.Editing
             var notes = selectedNotes.Count > 0 ? selectedNotes : part.notes.ToList();
             foreach (var note in notes)
             {
-                if (note.lyric != lyric && (note.Prev == null || note.Prev.End < note.position - 120))
+                if (note.lyric != lyric && (note.Prev == null || note.Prev.End < note.position - len))
                 {
-                    var addNote = project.CreateNote(note.tone, note.position - 120, 120);
+                    var addNote = project.CreateNote(note.tone, note.position - len, len);
                     foreach (var exp in note.phonemeExpressions.OrderBy(exp => exp.index))
                     {
                         addNote.SetExpression(project, project.tracks[part.trackNo], exp.abbr, new float[] { exp.value });
