@@ -57,6 +57,20 @@ namespace OpenUtau.Core.Editing {
         }
     }
 
+    public class LetterUpper : SingleNoteLyricEdit {
+        public override string Name => "pianoroll.menu.lyrics.letterupper";
+        protected override string Transform(string lyric) {
+            return lyric.ToUpper();
+        }
+    }
+
+    public class LetterLower : SingleNoteLyricEdit {
+        public override string Name => "pianoroll.menu.lyrics.lettelower";
+        protected override string Transform(string lyric) {
+            return lyric.ToLower();
+        }
+    }
+
     public class JapaneseVCVtoCV : SingleNoteLyricEdit {
         public override string Name => "pianoroll.menu.lyrics.javcvtocv";
         protected override string Transform(string lyric) {
