@@ -107,6 +107,7 @@ namespace OpenUtau.Core.DiffSinger {
             }
             if (diyRhyDict.ContainsKey(lang)) {
                 LoadRhythmizer(diyRhyDict[lang]);
+                Log.Information("Load " + lang + " Rhythmizer: " + diyRhyDict[lang]);
                 return;
             } else {
                 LoadRhythmizer();
