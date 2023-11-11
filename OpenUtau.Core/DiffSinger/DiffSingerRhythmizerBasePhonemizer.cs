@@ -119,6 +119,8 @@ namespace OpenUtau.Core.DiffSinger {
                         continue;
                     }
                 }
+            } else {
+                Log.Information("JPNdict加载失败 请确认正确编写并放置了ds_JPN.txt");
             }
             if (err == 1) {
                 Log.Information(JsonConvert.SerializeObject(phoneDict));
@@ -141,6 +143,8 @@ namespace OpenUtau.Core.DiffSinger {
                         continue;
                     }
                 }
+            } else {
+                Log.Information("rhy_map加载失败 请确认正确编写并放置了rhy_map.txt");
             }
             Log.Information("加载到RhyMap为" + JsonConvert.SerializeObject(phoneDict));
             return phoneDict;
@@ -163,9 +167,8 @@ namespace OpenUtau.Core.DiffSinger {
         public string[] GetSimilarPhonemes(string[] phns) {
             try {
                 string[] similarPhnList = new string[phns.Length];
-                for (int i = 0; i < phns.Length; i++)
-                {
-                    similarPhnList[i]=GetSimilarPhoneme(phns[i]);
+                for (int i = 0; i < phns.Length; i++) {
+                    similarPhnList[i] = GetSimilarPhoneme(phns[i]);
                 }
                 return similarPhnList;
             } catch (Exception) {
