@@ -1,7 +1,7 @@
 # 改动内容
 ## 1. 音素器
 加入了几个DiffSinger Rhythmizer Phonemizer，可以将其他语种或其他派系的音素映射到牛夫人的Rhythmizer上，并使用其预测音素时长。
-歌手目录下需要准备`rhy_map.txt`音素映射文件、`ds_XXX.txt`语种字典。
+歌手目录下需要准备`rhy_map.txt`音素映射文件、`ds_XXX.txt`语种字典：ds_CNM|ds_CNY|ds_JPN|ds_ENG
 ### rhy_map.txt
 ```
 k1[需映射音素],k[牛夫人里的音素]
