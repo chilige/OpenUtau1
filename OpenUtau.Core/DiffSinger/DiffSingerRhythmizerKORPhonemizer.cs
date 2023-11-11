@@ -12,22 +12,19 @@ using Newtonsoft.Json;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Cantonese RHY Phonemizer", "DIFFS CNY-RHY", "BaiTang", language: "ZH")]
-    public class DiffSingerRhythmizerCNYPhonemizer : DiffSingerRhythmizerBasePhonemizer {
-
+    [Phonemizer("DiffSinger Korean RHY Phonemizer", "DIFFS KOR-RHY", "BaiTang", language: "KO")]
+    public class DiffSingerRhythmizerKORPhonemizer : DiffSingerRhythmizerBasePhonemizer {
         public override void SetUpPhoneDictAndRhy() {
-            LoadSingerRhythmizer("CNY");
-            GetRealPhnDict("ds_CNY.txt");
+            LoadSingerRhythmizer("KOR");
+            GetRealPhnDict("ds_KOR.txt");
             GetRhyMap();
         }
-
+        
         protected override void ProcessPart(Note[][] phrase) {
             ProcessByRhyMap(phrase);
         }
 
-        protected override string[] Romanize(IEnumerable<string> lyrics) {
-            return BaseCantonesePhonemizer.Romanize(lyrics);
-        }
+        // Roman TODO
     }
 
 }
