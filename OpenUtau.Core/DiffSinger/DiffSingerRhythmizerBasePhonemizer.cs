@@ -114,17 +114,17 @@ namespace OpenUtau.Core.DiffSinger {
                         phoneDict.Add(elements[0].Trim(), elements[1].Trim().Split(" "));
                     } catch (Exception ex) {
                         Log.Information(elements[0].Trim() + "的音素无法注入 请确认是否重复或内容异常");
-                        Log.Information(ex.StackTrace);
+                        // Log.Information(ex.StackTrace);
                         err = 1;
                         continue;
                     }
                 }
             } else {
-                Log.Information("JPNdict加载失败 请确认正确编写并放置了ds_JPN.txt");
+                Log.Information("dict加载失败 请确认正确编写并放置了ds_XXX.txt");
             }
-            if (err == 1) {
-                Log.Information(JsonConvert.SerializeObject(phoneDict));
-            }
+            // if (err == 1) {
+            //     Log.Information(JsonConvert.SerializeObject(phoneDict));
+            // }
             return phoneDict;
         }
 
@@ -139,14 +139,14 @@ namespace OpenUtau.Core.DiffSinger {
                     } catch (Exception ex) {
                         err = 1;
                         Log.Information(elements[0].Trim() + "的map无法注入 请确认是否重复或内容异常");
-                        Log.Information(ex.StackTrace);
+                        // Log.Information(ex.StackTrace);
                         continue;
                     }
                 }
             } else {
                 Log.Information("rhy_map加载失败 请确认正确编写并放置了rhy_map.txt");
             }
-            Log.Information("加载到RhyMap为" + JsonConvert.SerializeObject(phoneDict));
+            // Log.Information("加载到RhyMap为" + JsonConvert.SerializeObject(phoneDict));
             return phoneDict;
         }
 
