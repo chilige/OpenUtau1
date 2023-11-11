@@ -86,7 +86,6 @@ namespace OpenUtau.Core.DiffSinger {
                 Note[] group = phrase[groupIndex];
                 if (group[0].phoneticHint is null) {
                     var lyric = group[0].lyric;
-
                     if (realPhnDict.ContainsKey(lyric)) {
                         realNotePhonemes = realPhnDict[lyric];
                         notePhonemes = GetSimilarPhonemes(realNotePhonemes);

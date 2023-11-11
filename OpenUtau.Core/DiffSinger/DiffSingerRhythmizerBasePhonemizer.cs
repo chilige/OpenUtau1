@@ -162,9 +162,10 @@ namespace OpenUtau.Core.DiffSinger {
 
         public string[] GetSimilarPhonemes(string[] phns) {
             try {
-                string[] similarPhnList = { };
-                foreach (string phn in phns) {
-                    similarPhnList.Append(GetSimilarPhoneme(phn));
+                string[] similarPhnList = new string[phns.Length];
+                for (int i = 0; i < phns.Length; i++)
+                {
+                    similarPhnList[i]=GetSimilarPhoneme(phns[i]);
                 }
                 return similarPhnList;
             } catch (Exception) {
