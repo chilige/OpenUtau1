@@ -65,7 +65,7 @@ namespace OpenUtau.Core.Editing {
     }
 
     public class LetterLower : SingleNoteLyricEdit {
-        public override string Name => "pianoroll.menu.lyrics.lettelower";
+        public override string Name => "pianoroll.menu.lyrics.letterlower";
         protected override string Transform(string lyric) {
             return lyric.ToLower();
         }
