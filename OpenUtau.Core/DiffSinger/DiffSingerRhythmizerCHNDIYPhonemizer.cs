@@ -22,8 +22,13 @@ namespace OpenUtau.Core.DiffSinger {
         public override void SetUpPhoneDictAndRhy() {
             LoadSingerRhythmizer("CNM");
             GetRealPhnDict("ds_CNM.txt");
-            this.chn2PhnDict = this.realPhnDict;
             GetRhyMap();
+            try {
+                string path = Path.Combine(singer.Location, "ds_CNM.txt");
+                this.chn2PhnDict = LoadDsDict(path);
+            } catch (Exception) {
+                return;
+            }
             try {
                 string path = Path.Combine(singer.Location, "ds_CNM3.txt");
                 this.chn3PhnDict = LoadDsDict(path);
