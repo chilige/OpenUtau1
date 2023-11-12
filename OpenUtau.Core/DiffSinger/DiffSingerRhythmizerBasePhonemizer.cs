@@ -470,9 +470,7 @@ namespace OpenUtau.Core.DiffSinger {
                         newKey = key.Replace(rep, "") + suffix;
                     }
                 }
-                if (!this.realPhnDict.ContainsKey(newKey)) {
-                    this.realPhnDict[newKey] = newDict[key];
-                }
+                this.realPhnDict[newKey] = newDict[key];
             }
         }
 
