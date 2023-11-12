@@ -463,25 +463,15 @@ namespace OpenUtau.Core.DiffSinger {
         }
 
         public void AddDictKeySuffixToRealDict(Dictionary<string, string[]> newDict, string suffix, string rep = "") {
-            foreach (var key in newDict.Keys) {
-                string newKey = "";
-                if (rep == "") {
-                    newKey = key + suffix;
-                } else {
+            foreach (var key in newDict.Keys.ToList()) {
+                string newKey = key + suffix;
+                if (!string.IsNullOrEmpty(rep)) {
                     if (key.EndsWith(rep)) {
                         newKey = key.Replace(rep, "") + suffix;
-                    } else {
-                        newKey = key + suffix;
                     }
                 }
-                try {
-                    if (this.realPhnDict.ContainsKey(newKey)) {
-                        continue;
-                    } else {
-                        this.realPhnDict[newKey] = newDict[key];
-                    }
-                } catch (Exception) {
-                    continue;
+                if (!this.realPhnDict.ContainsKey(newKey)) {
+                    this.realPhnDict[newKey] = newDict[key];
                 }
             }
         }
