@@ -9,6 +9,7 @@ using System.Text;
 using System.Linq;
 using Serilog;
 using Newtonsoft.Json;
+using ToolGood.Words.Pinyin;
 
 namespace OpenUtau.Core.DiffSinger {
 
@@ -68,9 +69,9 @@ namespace OpenUtau.Core.DiffSinger {
     public abstract class DiffSingerRhythmizerBasePhonemizer : MachineLearningPhonemizer {
         public USinger singer;
         public DsBaseRhythmizer rhythmizer;
-        public Dictionary<string, string[]> phoneDict;
-        public Dictionary<string, string[]> realPhnDict;
-        public Dictionary<string, string> rhyMapDict;
+        public Dictionary<string, string[]> phoneDict = new Dictionary<string, string[]> { };
+        public Dictionary<string, string[]> realPhnDict = new Dictionary<string, string[]> { };
+        public Dictionary<string, string> rhyMapDict = new Dictionary<string, string> { };
 
         public override void SetSinger(USinger singer) {
             if (this.singer == singer) {
@@ -439,6 +440,26 @@ namespace OpenUtau.Core.DiffSinger {
                 }
                 partResult[group[0].position] = noteResult;
             }
+        }
+
+        public static string[] RomanizeChineseNoSuffix(IEnumerable<string> lyrics) {
+            var lyricsArray = lyrics.ToArray();
+            var hanziLyrics = String.Join("", lyricsArray
+                .Where(IsHanziNoSuffix));
+            var pinyinResult = WordsHelper.GetPinyin(hanziLyrics.Replace("#3", "").Replace("#2", ""), " ").ToLower().Split();
+            var pinyinIndex = 0;
+            for (int i = 0; i < lyricsArray.Length; i++) {
+                if (IsHanziNoSuffix(lyricsArray[i])) {
+                    lyricsArray[i] = pinyinResult[pinyinIndex];
+                    pinyinIndex++;
+                }
+            }
+            return lyricsArray;
+        }
+
+        public static bool IsHanziNoSuffix(string lyric) {
+            string lyricNoSuffix = lyric.Replace("#3", "").Replace("#2", "");
+            return lyricNoSuffix.Length == 1 && WordsHelper.IsAllChinese(lyricNoSuffix);
         }
 
         public static IEnumerable<double> CumulativeSum(IEnumerable<double> sequence, double start = 0) {

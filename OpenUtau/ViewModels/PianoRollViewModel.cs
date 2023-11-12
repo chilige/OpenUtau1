@@ -179,6 +179,8 @@ namespace OpenUtau.App.ViewModels {
                 new LetterLower(),
                 new LetterUpper(),
                 new JapaneseVCVtoCV(),
+                new AddLyricSuffix("#3","pianoroll.menu.lyrics.addsuffixsan"),
+                new RemoveLyricSuffix("#3","pianoroll.menu.lyrics.removesuffixsan"),
                 new RemoveToneSuffix(),
                 new RemoveLetterSuffix(),
                 new MoveSuffixToVoiceColor(),

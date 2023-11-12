@@ -71,6 +71,46 @@ namespace OpenUtau.Core.Editing {
         }
     }
 
+    public class AddLyricSuffix : SingleNoteLyricEdit {
+
+        private string suffix;
+        private string name;
+        public override string Name => name;
+
+        public AddLyricSuffix(string suffix, string name) {
+            this.suffix = suffix;
+            this.name = name;
+        }
+
+        protected override string Transform(string lyric) {
+            if (lyric.EndsWith(suffix)) {
+                return lyric;
+            } else {
+                return lyric + suffix;
+            }
+        }
+    }
+
+    public class RemoveLyricSuffix : SingleNoteLyricEdit {
+
+        private string suffix;
+        private string name;
+        public override string Name => name;
+
+        public RemoveLyricSuffix(string suffix, string name) {
+            this.suffix = suffix;
+            this.name = name;
+        }
+
+        protected override string Transform(string lyric) {
+            if (lyric.EndsWith(suffix)) {
+                return lyric.Replace(suffix,"");
+            } else {
+                return lyric;
+            }
+        }
+    }
+
     public class JapaneseVCVtoCV : SingleNoteLyricEdit {
         public override string Name => "pianoroll.menu.lyrics.javcvtocv";
         protected override string Transform(string lyric) {

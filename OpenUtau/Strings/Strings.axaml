@@ -220,6 +220,8 @@
   <system:String x:Key="pianoroll.menu.lyrics.romajitohiragana">Romaji to Hiragana</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterlower">Lowercase</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterupper">Capitalize</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.addsuffixsan">Add Mandarin #3 Label</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.removesuffixsan">Remove Mandarin #3 Label</system:String>
   <system:String x:Key="pianoroll.menu.notedefaults">Note Defaults</system:String>
   <system:String x:Key="pianoroll.menu.notes">Notes</system:String>
   <system:String x:Key="pianoroll.menu.notes.addheadap">Add Head "AP"</system:String>
