@@ -462,6 +462,30 @@ namespace OpenUtau.Core.DiffSinger {
             return lyricNoSuffix.Length == 1 && WordsHelper.IsAllChinese(lyricNoSuffix);
         }
 
+        public void AddDictKeySuffixToRealDict(Dictionary<string, string[]> newDict, string suffix, string rep = "") {
+            foreach (var key in newDict.Keys) {
+                string newKey = "";
+                if (rep == "") {
+                    newKey = key + suffix;
+                } else {
+                    if (key.EndsWith(rep)) {
+                        newKey = key.Replace(rep, "") + suffix;
+                    } else {
+                        newKey = key + suffix;
+                    }
+                }
+                try {
+                    if (this.realPhnDict.ContainsKey(newKey)) {
+                        continue;
+                    } else {
+                        this.realPhnDict[newKey] = newDict[key];
+                    }
+                } catch (Exception) {
+                    continue;
+                }
+            }
+        }
+
         public static IEnumerable<double> CumulativeSum(IEnumerable<double> sequence, double start = 0) {
             double sum = start;
             foreach (var item in sequence) {
