@@ -18,6 +18,7 @@ namespace OpenUtau.Core.DiffSinger {
     public class DiffSingerRhythmizerCHNDIYPhonemizer : DiffSingerRhythmizerBasePhonemizer {
         public Dictionary<string, string[]> chn2PhnDict = new Dictionary<string, string[]> { };
         public Dictionary<string, string[]> chn3PhnDict = new Dictionary<string, string[]> { };
+        public Dictionary<string, string[]> jpnPhnDict = new Dictionary<string, string[]> { };
 
         public override void SetUpPhoneDictAndRhy() {
             LoadSingerRhythmizer("CNM");
@@ -35,8 +36,15 @@ namespace OpenUtau.Core.DiffSinger {
             } catch (Exception) {
                 return;
             }
-            AddDictKeySuffixToRealDict(chn2PhnDict, "#2");
-            AddDictKeySuffixToRealDict(chn3PhnDict, "#3", "0");
+            try {
+                string path = Path.Combine(singer.Location, "ds_JPN.txt");
+                this.jpnPhnDict = LoadDsDict(path);
+            } catch (Exception) {
+                return;
+            }
+            AddDictKeySuffixToRealDict(chn2PhnDict, "&2");
+            AddDictKeySuffixToRealDict(chn3PhnDict, "&3", "0");
+            AddDictKeySuffixToRealDict(jpnPhnDict, "&j");
         }
 
         protected override void ProcessPart(Note[][] phrase) {

@@ -211,8 +211,10 @@
   <system:String x:Key="pianoroll.menu.lyrics.romajitohiragana">罗马音转平假名</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterlower">字母小写</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterupper">字母大写</system:String>
-  <system:String x:Key="pianoroll.menu.lyrics.addsuffixsan">增加中文三段式解析标记#3</system:String>
-  <system:String x:Key="pianoroll.menu.lyrics.removesuffixsan">去除中文三段式解析标记#3</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.addsuffixsan">增加中文三段式标记</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.removesuffixsan">去除中文三段式标记</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.addsuffixjpn">增加日语解析标记</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.removesuffixjpn">去除日语解析标记</system:String>
   <system:String x:Key="pianoroll.menu.notedefaults">音符设置</system:String>
   <system:String x:Key="pianoroll.menu.noteproperty">音符属性</system:String>
   <system:String x:Key="pianoroll.menu.notes">音符</system:String>
