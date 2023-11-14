@@ -210,6 +210,7 @@
   <system:String x:Key="pianoroll.menu.lyrics.dashtoplus">Replace "-" with "+"</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.edit">Edit Lyrics</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.hiraganatoromaji">Hiragana to Romaji</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.hanzitocan">Hanzi to CantonesePinyin</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.insertslur">Insert slur lyric</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.javcvtocv">Japanese VCV to CV</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.movesuffixtovoicecolor">Move Suffix to VoiceColor</system:String>
@@ -217,10 +218,18 @@
   <system:String x:Key="pianoroll.menu.lyrics.removephonetichint">Remove Phonetic Hint</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.removetonesuffix">Remove Tone Suffix</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.romajitohiragana">Romaji to Hiragana</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.letterlower">Lowercase</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.letterupper">Capitalize</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.addsuffixsan">Add DIFFS-CHN Diphthong Label</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.removesuffixsan">Remove DIFFS-CHN Diphthong Label</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.addsuffixjpn">Add DIFFS-CHN JPN Label</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.removesuffixjpn">Remove DIFFS-CHN JPN Label</system:String>
   <system:String x:Key="pianoroll.menu.notedefaults">Note Defaults</system:String>
   <system:String x:Key="pianoroll.menu.notes">Notes</system:String>
+  <system:String x:Key="pianoroll.menu.notes.addheadap">Add Head "AP"</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtaildash">Add tail "-"</system:String>
   <system:String x:Key="pianoroll.menu.notes.addtailrest">Add tail "R"</system:String>
+  <system:String x:Key="pianoroll.menu.notes.addtailsp">Add tail "SP"</system:String>
   <system:String x:Key="pianoroll.menu.notes.bakepitch">Convert PITD to pitch control points</system:String>
   <system:String x:Key="pianoroll.menu.notes.clear.vibratos">Clear vibratos</system:String>
   <system:String x:Key="pianoroll.menu.notes.hanzitopinyin">Hanzi to pinyin</system:String>
@@ -236,8 +245,10 @@
   <system:String x:Key="pianoroll.menu.notes.reset.phonemetimings">Reset phoneme timings</system:String>
   <system:String x:Key="pianoroll.menu.notes.reset.pitchbends">Reset pitch bends</system:String>
   <system:String x:Key="pianoroll.menu.notes.reset.vibratos">Reset vibratos</system:String>
+  <system:String x:Key="pianoroll.menu.notes.removeheadap">Remove Head "AP"</system:String>
   <system:String x:Key="pianoroll.menu.notes.removetaildash">Remove tail "-"</system:String>
   <system:String x:Key="pianoroll.menu.notes.removetailrest">Remove tail "R"</system:String>
+  <system:String x:Key="pianoroll.menu.notes.removetailsp">Remove tail "SP"</system:String>
   <system:String x:Key="pianoroll.menu.part">Part</system:String>
   <system:String x:Key="pianoroll.menu.part.legacypluginexp">Legacy Plugin (Experimental)</system:String>
   <system:String x:Key="pianoroll.menu.part.singer">Singer and Oto settings</system:String>
