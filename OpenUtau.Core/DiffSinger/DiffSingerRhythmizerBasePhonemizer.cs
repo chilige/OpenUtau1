@@ -336,7 +336,7 @@ namespace OpenUtau.Core.DiffSinger {
             }
         }
 
-        public void ProcessByRhyMap(Note[][] phrase) {
+        public virtual void ProcessByRhyMap(Note[][] phrase) {
             float padding = 0.5f;//Padding time for consonants at the beginning of a sentence
             var phonemes = new List<string> { "SP" };
             var realPhonemes = new List<string> { "SP" };
@@ -384,12 +384,6 @@ namespace OpenUtau.Core.DiffSinger {
                 phonemes.Count,
                 timeAxis.TickPosToMsPos(lastNote.position + lastNote.duration) / 1000));
 
-            // Log.Information(JsonConvert.SerializeObject(phonemes));
-            // Log.Information(JsonConvert.SerializeObject(realPhonemes));
-
-            //Call Diffsinger phoneme timing model
-            //ph_dur = session.run(['ph_dur'], {'tokens': tokens, 'midi': midi, 'midi_dur': midi_dur, 'is_slur': is_slur})[0]
-            //error phonemes are replaced with SP
             long defaultToken = rhythmizer.phonemes.IndexOf("SP");
             var tokens = phonemes
                 .Select(x => (long)(rhythmizer.phonemes.IndexOf(x)))
@@ -410,14 +404,9 @@ namespace OpenUtau.Core.DiffSinger {
                 .Reshape(new int[] { 1, is_slur.Count })));
             var outputs = rhythmizer.session.Run(inputs);
             ph_dur = outputs.First().AsTensor<float>().Select(x => (double)x).ToList();
-            //Align the starting time of vowels to the position of each note, unit: s
             var positions = new List<double>();
             List<double> alignGroup = ph_dur.GetRange(0, phAlignPoints[0].Item1);
-            //Starting consonants are not scaled
             positions.AddRange(stretch(alignGroup, 1, phAlignPoints[0].Item2));
-            //The other phonemes are scaled according to the ratio of the time difference 
-            //between the two alignment points and the duration of the phoneme
-            //pairwise(alignGroups)
             foreach (var pair in phAlignPoints.Zip(phAlignPoints.Skip(1), (a, b) => Tuple.Create(a, b))) {
                 var currAlignPoint = pair.Item1;
                 var nextAlignPoint = pair.Item2;
@@ -425,7 +414,6 @@ namespace OpenUtau.Core.DiffSinger {
                 double ratio = (nextAlignPoint.Item2 - currAlignPoint.Item2) / alignGroup.Sum();
                 positions.AddRange(stretch(alignGroup, ratio, nextAlignPoint.Item2));
             }
-            //Convert the position sequence to tick and fill into the result list
             int index = 1;
             foreach (int groupIndex in Enumerable.Range(0, phrase.Length)) {
                 Note[] group = phrase[groupIndex];
