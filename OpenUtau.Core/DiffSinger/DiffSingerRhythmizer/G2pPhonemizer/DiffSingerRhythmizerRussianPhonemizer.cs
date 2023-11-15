@@ -7,12 +7,12 @@ using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Russian RHY Phonemizer", "DIFFS RUS-RHY", "BaiTang", language: "DIFFS-RHY")]
-    public class DiffSingerRhythmizerRUSPhonemizer : DiffSingerRhythmizerG2pPhonemizer {
+    [Phonemizer("DiffSinger Russian RHY Phonemizer", "DIFFS RU-RHY", "BaiTang", language: "DIFFS-RHY")]
+    public class DiffSingerRhythmizerRussianPhonemizer : DiffSingerRhythmizerG2pPhonemizer {
         public override void SetUpPhoneDictAndRhy() {
-            LoadSingerRhythmizer("RUS");
+            LoadSingerRhythmizer("RU");
             this.g2p = LoadG2p();
-            GetRealPhnDict("ds_RUS.txt");
+            GetRealPhnDict("ds_RU.txt");
             GetRhyMap();
         }
 

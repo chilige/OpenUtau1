@@ -5,7 +5,7 @@ using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger English RHY Phonemizer", "DIFFS ENG-RHY", "BaiTang", language: "DIFFS-RHY")]
+    [Phonemizer("DiffSinger English RHY Phonemizer(deprecated)", "DIFFS ENG-RHY", "BaiTang", language: "DIFFS-RHY")]
     public class DiffSingerRhythmizerENGPhonemizer : DiffSingerRhythmizerBasePhonemizer {
 
         public override void SetUpPhoneDictAndRhy() {
@@ -18,5 +18,4 @@ namespace OpenUtau.Core.DiffSinger {
             ProcessByRhyMap(phrase);
         }
     }
-
 }

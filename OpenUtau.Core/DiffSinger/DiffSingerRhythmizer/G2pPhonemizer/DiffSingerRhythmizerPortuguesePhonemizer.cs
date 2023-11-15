@@ -7,12 +7,12 @@ using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Portuguese RHY Phonemizer", "DIFFS POR-RHY", "BaiTang", language: "DIFFS-RHY")]
-    public class DiffSingerRhythmizerPORPhonemizer : DiffSingerRhythmizerG2pPhonemizer {
+    [Phonemizer("DiffSinger Portuguese RHY Phonemizer", "DIFFS PT-RHY", "BaiTang", language: "DIFFS-RHY")]
+    public class DiffSingerRhythmizerPortuguesePhonemizer : DiffSingerRhythmizerG2pPhonemizer {
         public override void SetUpPhoneDictAndRhy() {
-            LoadSingerRhythmizer("POR");
+            LoadSingerRhythmizer("PT");
             this.g2p = LoadG2p();
-            GetRealPhnDict("ds_POR.txt");
+            GetRealPhnDict("ds_PT.txt");
             GetRhyMap();
         }
 
@@ -20,14 +20,14 @@ namespace OpenUtau.Core.DiffSinger {
             ProcessByRhyMap(phrase);
         }
 
-        protected override string GetDictionaryName()=>"dsdict-pt.yaml";
+        protected override string GetDictionaryName() => "dsdict-pt.yaml";
         protected override IG2p LoadBaseG2p() => new PortugueseG2p();
         protected override string[] GetBaseG2pVowels() => new string[] {
             "E", "O", "a", "a~", "e", "e~", "i", "i~", "o", "o~", "u", "u~"
         };
 
         protected override string[] GetBaseG2pConsonants() => new string[] {
-            "J", "L", "R", "S", "X", "Z", "b", "d", "dZ", "f", "g", "j", "j~", 
+            "J", "L", "R", "S", "X", "Z", "b", "d", "dZ", "f", "g", "j", "j~",
             "k", "l", "m", "n", "p", "r", "s", "t", "tS", "v", "w", "w~", "z"
         };
     }
