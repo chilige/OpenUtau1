@@ -6,7 +6,7 @@ using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Mandarin 三段式 RHY Phonemizer", "DIFFS CNM-TRI-RHY", "BaiTang", language: "ZH")]
+    [Phonemizer("DiffSinger Mandarin 三段式 RHY Phonemizer", "DIFFS CNM-TRI-RHY", "BaiTang", language: "DIFFS-RHY")]
     public class DiffSingerRhythmizerCHNTRIPhonemizer : DiffSingerRhythmizerBasePhonemizer {
 
         public Dictionary<string, string[]> chn2PhnDict = new Dictionary<string, string[]> { };
