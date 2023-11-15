@@ -115,6 +115,7 @@ namespace OpenUtau.Core.DiffSinger {
             return realPhnList.ToArray();
         }
 
+        //TODO polysyllabic word support
         public override void ProcessByRhyMap(Note[][] phrase) {
             float padding = 0.5f;//Padding time for consonants at the beginning of a sentence
             var phonemes = new List<string> { "SP" };
