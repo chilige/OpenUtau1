@@ -21,6 +21,33 @@ namespace OpenUtau.Core.Editing {
         protected abstract string Transform(string lyric);
     }
 
+    public class ConnectSeparatedWord : BatchEdit {
+        public string Name => "pianoroll.menu.lyrics.connectseparatedword";
+
+        public void Run(UProject project, UVoicePart part, List<UNote> selectedNotes, DocManager docManager) {
+            var notes = selectedNotes.Count > 0 ? selectedNotes.ToArray() : part.notes.ToArray();
+            if (notes.Length == 0) {
+                return;
+            }
+            string[] lyrics = new string[notes.Length];
+            for (int i = 0; i < notes.Length; i++) {
+                if (notes[i].lyric.EndsWith("-") && i < notes.Length - 1) {
+                    lyrics[i] = notes[i].lyric.Replace("-", "") + notes[i + 1].lyric;
+                    lyrics[i + 1] = "+";
+                    i++;
+                } else if (notes[i].lyric.StartsWith("-") && i > 0) {
+                    lyrics[i - 1] = notes[i - 1].lyric + notes[i].lyric.Replace("-", "");
+                    lyrics[i] = "+";
+                } else {
+                    lyrics[i] = notes[i].lyric;
+                }
+            }
+            docManager.StartUndoGroup(true);
+            docManager.ExecuteCmd(new ChangeNoteLyricCommand(part, notes, lyrics));
+            docManager.EndUndoGroup();
+        }
+    }
+
     public class RomajiToHiragana : SingleNoteLyricEdit {
         static Dictionary<string, string> mapping = new Dictionary<string, string>() {
             {".", "."}, {",", ","}, {":", ":"}, {"/", "/"}, {"!", "!"}, {"?", "?"},
@@ -104,7 +131,7 @@ namespace OpenUtau.Core.Editing {
 
         protected override string Transform(string lyric) {
             if (lyric.EndsWith(suffix)) {
-                return lyric.Replace(suffix,"");
+                return lyric.Replace(suffix, "");
             } else {
                 return lyric;
             }

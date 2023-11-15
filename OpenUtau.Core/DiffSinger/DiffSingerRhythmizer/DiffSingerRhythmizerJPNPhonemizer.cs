@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.ML.OnnxRuntime;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using System.IO;
 using OpenUtau.Api;
 using OpenUtau.Core.Ustx;
-using System.Text;
-using System.Linq;
-using Serilog;
-using Newtonsoft.Json;
 
 namespace OpenUtau.Core.DiffSinger {
 
-    [Phonemizer("DiffSinger Japanese RHY Phonemizer", "DIFFS JPN-RHY", "BaiTang", language: "JA")]
+    [Phonemizer("DiffSinger Japanese RHY Phonemizer", "DIFFS JPN-RHY", "BaiTang", language: "DIFFS-RHY")]
     public class DiffSingerRhythmizerJPNPhonemizer : DiffSingerRhythmizerBasePhonemizer {
         public override void SetUpPhoneDictAndRhy() {
             LoadSingerRhythmizer("JPN");

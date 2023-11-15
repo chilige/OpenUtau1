@@ -179,6 +179,7 @@ namespace OpenUtau.App.ViewModels {
                 new HanziToCantonese(),
                 new LetterLower(),
                 new LetterUpper(),
+                new ConnectSeparatedWord(),
                 new JapaneseVCVtoCV(),
                 new AddLyricSuffix("&3","pianoroll.menu.lyrics.addsuffixsan"),
                 new RemoveLyricSuffix("&3","pianoroll.menu.lyrics.removesuffixsan"),

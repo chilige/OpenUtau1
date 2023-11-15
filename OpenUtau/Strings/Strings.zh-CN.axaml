@@ -206,11 +206,12 @@
   <system:String x:Key="pianoroll.menu.lyrics.javcvtocv">日语 VCV 转 CV</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.movesuffixtovoicecolor">将音符后缀解析为音色</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.removelettersuffix">去除字母后缀</system:String>
-  <!--<system:String x:Key="pianoroll.menu.lyrics.removephonetichint">Remove Phonetic Hint</system:String>-->
+  <system:String x:Key="pianoroll.menu.lyrics.removephonetichint">去除自定义音标</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.removetonesuffix">去除音阶后缀</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.romajitohiragana">罗马音转平假名</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterlower">字母小写</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.letterupper">字母大写</system:String>
+  <system:String x:Key="pianoroll.menu.lyrics.connectseparatedword">连接被-分隔开的单词</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.addsuffixsan">增加中文三段式标记</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.removesuffixsan">去除中文三段式标记</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.addsuffixjpn">增加日语解析标记</system:String>
