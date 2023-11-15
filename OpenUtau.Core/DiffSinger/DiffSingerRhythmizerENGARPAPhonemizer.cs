@@ -11,6 +11,7 @@ namespace OpenUtau.Core.DiffSinger {
     public class DiffSingerRhythmizerENGARPAPhonemizer : DiffSingerRhythmizerG2pPhonemizer {
         public override void SetUpPhoneDictAndRhy() {
             LoadSingerRhythmizer("ARPA");
+            this.g2p = LoadG2p();
             GetRealPhnDict("ds_ARPA.txt");
             GetRhyMap();
         }

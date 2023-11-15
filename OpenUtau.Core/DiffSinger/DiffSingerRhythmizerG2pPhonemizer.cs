@@ -18,18 +18,6 @@ namespace OpenUtau.Core.DiffSinger {
         protected virtual string[] GetBaseG2pVowels() => new string[] { };
         protected virtual string[] GetBaseG2pConsonants() => new string[] { };
 
-        public override void SetSinger(USinger singer) {
-            if (this.singer == singer) {
-                return;
-            }
-            this.singer = singer;
-            if (this.singer == null) {
-                return;
-            }
-            this.g2p = LoadG2p();
-            SetUpPhoneDictAndRhy();
-        }
-
         protected virtual IG2p LoadG2p() {
             string rootPath;
             if (File.Exists(Path.Join(singer.Location, "dsdur", "dsconfig.yaml"))) {
