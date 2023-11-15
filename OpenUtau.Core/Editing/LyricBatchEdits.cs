@@ -35,6 +35,9 @@ namespace OpenUtau.Core.Editing {
                     lyrics[i] = notes[i].lyric.Replace("-", "") + notes[i + 1].lyric;
                     lyrics[i + 1] = "+";
                     i++;
+                } else if (notes[i].lyric.StartsWith("-") && i > 0) {
+                    lyrics[i - 1] = notes[i - 1].lyric + notes[i].lyric.Replace("-", "");
+                    lyrics[i] = "+";
                 } else {
                     lyrics[i] = notes[i].lyric;
                 }
