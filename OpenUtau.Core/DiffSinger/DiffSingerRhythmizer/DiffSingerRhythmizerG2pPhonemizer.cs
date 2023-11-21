@@ -142,7 +142,7 @@ namespace OpenUtau.Core.DiffSinger {
                     //     realNotePhonemes = new string[] { lyric };
                     //     notePhonemes = new string[] { lyric };
                     // }
-                    realNotePhonemes = GetSymbols(group[0]);
+                    realNotePhonemes = GetRealPhnFromSymbols(GetSymbols(group[0]));
                     notePhonemes = GetSimilarPhonemes(realNotePhonemes);
                 } else {
                     realNotePhonemes = group[0].phoneticHint.Split(" ");
