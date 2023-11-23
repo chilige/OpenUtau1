@@ -5,14 +5,11 @@ using System.Linq;
 using Serilog;
 using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-
 using OpenUtau.Api;
 using OpenUtau.Core.Ustx;
 
-namespace OpenUtau.Core.DiffSinger
-{
-    public abstract class DiffSingerBasePhonemizer : MachineLearningPhonemizer
-    {
+namespace OpenUtau.Core.DiffSinger {
+    public abstract class DiffSingerDsdurBasePhonemizer : MachineLearningPhonemizer {
         USinger singer;
         DsConfig dsConfig;
         string rootPath;
@@ -22,13 +19,15 @@ namespace OpenUtau.Core.DiffSinger
         public IG2p g2p;
         public List<string> phonemes;
         DiffSingerSpeakerEmbedManager speakerEmbedManager;
-
+        protected virtual string GetDictionaryName() => "dsdict.yaml";
         string defaultPause = "SP";
 
         public override void SetSinger(USinger singer) {
             this.singer = singer;
             if (File.Exists(Path.Join(singer.Location, "dsdur", "dsconfig.yaml"))) {
                 rootPath = Path.Combine(singer.Location, "dsdur");
+            } else if (File.Exists(Path.Join(PathManager.Inst.DependencyPath, "dsdur", "dsconfig.yaml"))) {
+                rootPath = Path.Combine(PathManager.Inst.DependencyPath, "dsdur");
             } else {
                 rootPath = singer.Location;
             }
@@ -37,7 +36,7 @@ namespace OpenUtau.Core.DiffSinger
             try {
                 var configTxt = File.ReadAllText(configPath);
                 dsConfig = Yaml.DefaultDeserializer.Deserialize<DsConfig>(configTxt);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.Error(e, $"failed to load dsconfig from {configPath}");
                 return;
             }
@@ -46,7 +45,7 @@ namespace OpenUtau.Core.DiffSinger
             g2p = LoadG2p(rootPath);
             //Load phonemes list
             string phonemesPath = Path.Combine(rootPath, dsConfig.phonemes);
-            phonemes = File.ReadLines(phonemesPath,singer.TextFileEncoding).ToList();
+            phonemes = File.ReadLines(phonemesPath, singer.TextFileEncoding).ToList();
             //Load models
             var linguisticModelPath = Path.Join(rootPath, dsConfig.linguistic);
             try {
@@ -67,7 +66,7 @@ namespace OpenUtau.Core.DiffSinger
         protected virtual IG2p LoadG2p(string rootPath) {
             var g2ps = new List<IG2p>();
             // Load dictionary from singer folder.
-            string file = Path.Combine(rootPath, "dsdict.yaml");
+            string file = Path.Combine(rootPath, GetDictionaryName());
             if (File.Exists(file)) {
                 try {
                     g2ps.Add(G2pDictionary.NewBuilder().Load(File.ReadAllText(file)).Build());
@@ -93,7 +92,7 @@ namespace OpenUtau.Core.DiffSinger
             // User has not provided hint, query g2p dictionary.
             var g2presult = g2p.Query(note.lyric)
                 ?? g2p.Query(note.lyric.ToLowerInvariant());
-            if(g2presult != null) {
+            if (g2presult != null) {
                 return g2presult;
             }
             //not founded in g2p dictionary, treat lyric as phonetic hint
@@ -106,34 +105,34 @@ namespace OpenUtau.Core.DiffSinger
             return new string[] { defaultPause };
         }
 
-        string GetSpeakerAtIndex(Note note, int index){
+        string GetSpeakerAtIndex(Note note, int index) {
             var attr = note.phonemeAttributes?.FirstOrDefault(attr => attr.index == index) ?? default;
             var speaker = singer.Subbanks
                 .Where(subbank => subbank.Color == attr.voiceColor && subbank.toneSet.Contains(note.tone))
                 .FirstOrDefault();
-            if(speaker is null) {
+            if (speaker is null) {
                 return "";
             }
             return speaker.Suffix;
         }
 
-        dsPhoneme[] GetDsPhonemes(Note note){
+        dsPhoneme[] GetDsPhonemes(Note note) {
             return GetSymbols(note)
                 .Select((symbol, index) => new dsPhoneme(symbol, GetSpeakerAtIndex(note, index)))
-                .ToArray();            
+                .ToArray();
         }
 
         protected bool IsSyllableVowelExtensionNote(Note note) {
             return note.lyric.StartsWith("+~") || note.lyric.StartsWith("+*");
         }
 
-        List<phonemesPerNote> ProcessWord(Note[] notes){
+        List<phonemesPerNote> ProcessWord(Note[] notes) {
             var wordPhonemes = new List<phonemesPerNote>{
                 new phonemesPerNote(-1, notes[0].tone)
             };
             var dsPhonemes = GetDsPhonemes(notes[0]);
             var isVowel = dsPhonemes.Select(s => g2p.IsVowel(s.Symbol)).ToArray();
-            var nonExtensionNotes = notes.Where(n=>!IsSyllableVowelExtensionNote(n)).ToArray();
+            var nonExtensionNotes = notes.Where(n => !IsSyllableVowelExtensionNote(n)).ToArray();
             //distribute phonemes to notes
             var noteIndex = 0;
             for (int i = 0; i < dsPhonemes.Length; i++) {
@@ -148,8 +147,8 @@ namespace OpenUtau.Core.DiffSinger
         }
 
         int framesBetweenTickPos(double tickPos1, double tickPos2) {
-            return (int)(timeAxis.TickPosToMsPos(tickPos2)/frameMs) 
-                - (int)(timeAxis.TickPosToMsPos(tickPos1)/frameMs);
+            return (int)(timeAxis.TickPosToMsPos(tickPos2) / frameMs)
+                - (int)(timeAxis.TickPosToMsPos(tickPos1) / frameMs);
         }
 
         public static IEnumerable<double> CumulativeSum(IEnumerable<double> sequence, double start = 0) {
@@ -178,20 +177,20 @@ namespace OpenUtau.Core.DiffSinger
             result.RemoveAt(result.Count - 1);
             return result;
         }
-        
-        public DiffSingerSpeakerEmbedManager getSpeakerEmbedManager(){
-            if(speakerEmbedManager is null) {
+
+        public DiffSingerSpeakerEmbedManager getSpeakerEmbedManager() {
+            if (speakerEmbedManager is null) {
                 speakerEmbedManager = new DiffSingerSpeakerEmbedManager(dsConfig, rootPath);
             }
             return speakerEmbedManager;
         }
-        
+
         protected override void ProcessPart(Note[][] phrase) {
             float padding = 500f;//Padding time for consonants at the beginning of a sentence, ms
             float frameMs = dsConfig.frameMs();
             var startMs = timeAxis.TickPosToMsPos(phrase[0][0].position) - padding;
             var lastNote = phrase[^1][^1];
-            var endTick = lastNote.position+lastNote.duration;
+            var endTick = lastNote.position + lastNote.duration;
             //[(Tick position of note, [phonemes])]
             //The first item of this list is for the consonants before the first note.
             var phrasePhonemes = new List<phonemesPerNote>{
@@ -202,19 +201,19 @@ namespace OpenUtau.Core.DiffSinger
                 var wordPhonemes = ProcessWord(word);
                 phrasePhonemes[^1].Phonemes.AddRange(wordPhonemes[0].Phonemes);
                 phrasePhonemes.AddRange(wordPhonemes.Skip(1));
-                notePhIndex.Add(notePhIndex[^1]+wordPhonemes.SelectMany(n=>n.Phonemes).Count());
+                notePhIndex.Add(notePhIndex[^1] + wordPhonemes.SelectMany(n => n.Phonemes).Count());
             }
-            
-            phrasePhonemes.Add(new phonemesPerNote(endTick,lastNote.tone));
+
+            phrasePhonemes.Add(new phonemesPerNote(endTick, lastNote.tone));
             phrasePhonemes[0].Position = timeAxis.MsPosToTickPos(
-                timeAxis.TickPosToMsPos(phrasePhonemes[1].Position)-padding
+                timeAxis.TickPosToMsPos(phrasePhonemes[1].Position) - padding
                 );
             //Linguistic Encoder
             var tokens = phrasePhonemes
                 .SelectMany(n => n.Phonemes)
                 .Select(p => (Int64)phonemes.IndexOf(p.Symbol))
                 .ToArray();
-            var word_div = phrasePhonemes.Take(phrasePhonemes.Count-1)
+            var word_div = phrasePhonemes.Take(phrasePhonemes.Count - 1)
                 .Select(n => (Int64)n.Phonemes.Count)
                 .ToArray();
             //Pairwise(phrasePhonemes)
@@ -243,7 +242,7 @@ namespace OpenUtau.Core.DiffSinger
                 .AsTensor<bool>();
             //Duration Predictor
             var ph_midi = phrasePhonemes
-                .SelectMany(n=>Enumerable.Repeat((Int64)n.Tone, n.Phonemes.Count))
+                .SelectMany(n => Enumerable.Repeat((Int64)n.Tone, n.Phonemes.Count))
                 .ToArray();
             //Call Diffsinger Duration Predictor model
             var durationInputs = new List<NamedOnnxValue>();
@@ -253,9 +252,9 @@ namespace OpenUtau.Core.DiffSinger
                 new DenseTensor<Int64>(ph_midi, new int[] { ph_midi.Length }, false)
                 .Reshape(new int[] { 1, ph_midi.Length })));
             //Speaker
-            if(dsConfig.speakers != null){
+            if (dsConfig.speakers != null) {
                 var speakerEmbedManager = getSpeakerEmbedManager();
-                var speakersByPhone =  phrasePhonemes
+                var speakersByPhone = phrasePhonemes
                     .SelectMany(n => n.Phonemes)
                     .Select(p => p.Speaker)
                     .ToArray();
@@ -263,18 +262,18 @@ namespace OpenUtau.Core.DiffSinger
                 durationInputs.Add(NamedOnnxValue.CreateFromTensor("spk_embed", spkEmbedTensor));
             }
             var durationOutputs = durationModel.Run(durationInputs);
-            List<double> durationFrames = durationOutputs.First().AsTensor<float>().Select(x=>(double)x).ToList();
-            
+            List<double> durationFrames = durationOutputs.First().AsTensor<float>().Select(x => (double)x).ToList();
+
             //Alignment
             //(the index of the phoneme to be aligned, the Ms position of the phoneme)
             var phAlignPoints = new List<Tuple<int, double>>();
             phAlignPoints = CumulativeSum(phrasePhonemes.Select(n => n.Phonemes.Count).ToList(), 0)
-                .Zip(phrasePhonemes.Skip(1), 
+                .Zip(phrasePhonemes.Skip(1),
                     (a, b) => new Tuple<int, double>(a, timeAxis.TickPosToMsPos(b.Position)))
                 .ToList();
             var positions = new List<double>();
             List<double> alignGroup = durationFrames.GetRange(1, phAlignPoints[0].Item1 - 1);
-            
+
             var phs = phrasePhonemes.SelectMany(n => n.Phonemes).ToList();
             //The starting consonant's duration keeps unchanged
             positions.AddRange(stretch(alignGroup, frameMs, phAlignPoints[0].Item2));
@@ -304,36 +303,6 @@ namespace OpenUtau.Core.DiffSinger
                 }
                 partResult[group[0].position] = noteResult;
             }
-        }
-    }
-
-    struct dsPhoneme{
-        public string Symbol;
-        public string Speaker;
-
-        public dsPhoneme(string symbol, string speaker){
-            Symbol = symbol;
-            Speaker = speaker;
-        }
-    }
-
-    class phonemesPerNote{
-        public int Position;
-        public int Tone;
-        public List<dsPhoneme> Phonemes;
-
-        public phonemesPerNote(int position, int tone, List<dsPhoneme> phonemes)
-        {
-            Position = position;
-            Tone = tone;
-            Phonemes = phonemes;
-        }
-
-        public phonemesPerNote(int position, int tone)
-        {
-            Position = position;
-            Tone = tone;
-            Phonemes = new List<dsPhoneme>();
         }
     }
 }
