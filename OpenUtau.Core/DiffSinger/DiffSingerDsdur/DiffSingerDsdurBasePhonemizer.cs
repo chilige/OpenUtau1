@@ -77,7 +77,7 @@ namespace OpenUtau.Core.DiffSinger {
             return new G2pFallbacks(g2ps.ToArray());
         }
 
-        string[] GetSymbols(Note note) {
+        public virtual string[] GetSymbols(Note note) {
             //priority:
             //1. phonetic hint
             //2. query from g2p dictionary

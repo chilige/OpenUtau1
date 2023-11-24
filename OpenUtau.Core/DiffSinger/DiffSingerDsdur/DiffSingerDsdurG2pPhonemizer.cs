@@ -13,6 +13,7 @@ namespace OpenUtau.Core.DiffSinger {
         //vowels and consonants of BaseG2p
         protected virtual string[] GetBaseG2pVowels() => new string[] { };
         protected virtual string[] GetBaseG2pConsonants() => new string[] { };
+        public Dictionary<string, string> g2pMapper;
 
         protected override IG2p LoadG2p(string rootPath) {
             var dictionaryName = GetDictionaryName();
@@ -22,6 +23,7 @@ namespace OpenUtau.Core.DiffSinger {
             var replacements_org = new Dictionary<string, string>();
             string file = Path.Combine(rootPath, dictionaryName);
             replacements_org = LoadRemapper(file);
+            this.g2pMapper = replacements_org;
             Dictionary<string, string> replacements = replacements_org.ToDictionary(pair => pair.Value, pair => pair.Key);
 
             // Load base g2p.
@@ -65,6 +67,46 @@ namespace OpenUtau.Core.DiffSinger {
                 Log.Information("remapper加载失败");
             }
             return phoneDict;
+        }
+
+        public override string[] GetSymbols(Note note) {
+            //priority:
+            //1. phonetic hint
+            //2. query from g2p dictionary
+            //3. treat lyric as phonetic hint, including single phoneme
+            //4. default pause
+            if (!string.IsNullOrEmpty(note.phoneticHint)) {
+                // Split space-separated symbols into an array.
+                return note.phoneticHint.Split()
+                    .Where(s => g2p.IsValidSymbol(s)) // skip the invalid symbols.
+                    .ToArray();
+            }
+            // User has not provided hint, query g2p dictionary.
+            var g2presult = g2p.Query(note.lyric)
+                ?? g2p.Query(note.lyric.ToLowerInvariant());
+            if (g2presult != null) {
+                return GetRealPhnFromSymbols(g2presult);
+            }
+            //not founded in g2p dictionary, treat lyric as phonetic hint
+            var lyricSplited = note.lyric.Split()
+                    .Where(s => g2p.IsValidSymbol(s)) // skip the invalid symbols.
+                    .ToArray();
+            if (lyricSplited.Length > 0) {
+                return lyricSplited;
+            }
+            return new string[] { "SP" };
+        }
+
+        public string[] GetRealPhnFromSymbols(string[] symbols) {
+            var realPhnList = new List<string> { };
+            foreach (var syb in symbols) {
+                if (this.g2pMapper.ContainsKey(syb)) {
+                    realPhnList.Add(this.g2pMapper[syb]);
+                } else {
+                    realPhnList.Add(syb);
+                }
+            }
+            return realPhnList.ToArray();
         }
     }
 }
