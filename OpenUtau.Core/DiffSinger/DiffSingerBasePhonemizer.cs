@@ -17,10 +17,10 @@ namespace OpenUtau.Core.DiffSinger
         DsConfig dsConfig;
         string rootPath;
         float frameMs;
-        public InferenceSession linguisticModel;
-        public InferenceSession durationModel;
-        public IG2p g2p;
-        public List<string> phonemes;
+        InferenceSession linguisticModel;
+        InferenceSession durationModel;
+        IG2p g2p;
+        List<string> phonemes;
         DiffSingerSpeakerEmbedManager speakerEmbedManager;
 
         string defaultPause = "SP";
