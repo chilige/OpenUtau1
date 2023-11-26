@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using OpenUtau.Core.G2p;
 using OpenUtau.Core.Ustx;
 using WanaKanaNet;
 
@@ -76,8 +77,8 @@ namespace OpenUtau.Core.Editing {
     public class HanziToCantonese : SingleNoteLyricEdit {
         public override string Name => "pianoroll.menu.lyrics.hanzitocan";
         protected override string Transform(string lyric) {
-            if (BaseCantonesePhonemizer.IsHanzi(lyric)) {
-                return BaseCantonesePhonemizer.GetCanRomanizeNote(lyric);
+            if (lyric.Length == 1) {
+                return ZhG2p.CantoneseInstance.Convert(lyric, false, true);
             } else {
                 return lyric;
             }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using OpenUtau.Api;
+using OpenUtau.Core.G2p;
 using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.DiffSinger {
@@ -20,7 +22,7 @@ namespace OpenUtau.Core.DiffSinger {
         }
 
         protected override string[] Romanize(IEnumerable<string> lyrics) {
-            return BaseCantonesePhonemizer.Romanize(lyrics);
+            return ZhG2p.CantoneseInstance.Convert(lyrics.ToList(), false, true).Split(" ");
         }
     }
 
