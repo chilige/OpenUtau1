@@ -20,12 +20,15 @@ namespace OpenUtau.Core.DiffSinger {
         public List<string> phonemes;
         DiffSingerSpeakerEmbedManager speakerEmbedManager;
         protected virtual string GetDictionaryName() => "dsdict.yaml";
+        protected virtual string GetDictionaryDsdurName() => "dsdur";
         string defaultPause = "SP";
 
         public override void SetSinger(USinger singer) {
             this.singer = singer;
             if (File.Exists(Path.Join(singer.Location, "dsdur", "dsconfig.yaml"))) {
                 rootPath = Path.Combine(singer.Location, "dsdur");
+            } else if (File.Exists(Path.Join(PathManager.Inst.DependencyPath, GetDictionaryDsdurName(), "dsconfig.yaml"))) {
+                rootPath = Path.Combine(PathManager.Inst.DependencyPath, GetDictionaryDsdurName());
             } else if (File.Exists(Path.Join(PathManager.Inst.DependencyPath, "dsdur", "dsconfig.yaml"))) {
                 rootPath = Path.Combine(PathManager.Inst.DependencyPath, "dsdur");
             } else {

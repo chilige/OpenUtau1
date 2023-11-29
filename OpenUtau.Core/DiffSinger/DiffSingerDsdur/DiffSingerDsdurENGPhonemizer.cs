@@ -6,6 +6,7 @@ namespace OpenUtau.Core.DiffSinger {
     [Phonemizer("DiffSinger English-ARPA Dsdur Phonemizer", "DIFFS ENG-DSDUR", "BaiTang", language: "DIFFS-DSDUR")]
     public class DiffSingerDsdurENGPhonemizer : DiffSingerDsdurG2pPhonemizer {
         protected override string GetDictionaryName() => "dsdict-en.txt";
+        protected override string GetDictionaryDsdurName() => "dsdur_en";
         protected override IG2p LoadBaseG2p() => new ArpabetG2p();
         protected override string[] GetBaseG2pVowels() => new string[] {
             "aa", "ae", "ah", "ao", "aw", "ay", "eh", "er",
