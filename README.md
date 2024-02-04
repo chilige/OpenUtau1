@@ -37,8 +37,10 @@ DiffSinger Japanese Rhythmizer Phonemizer，可直接输入假名，会自动转
 ```
 
 ## 2. 批量功能
-1. 自动添加AP，SP音素，汉字转换粤语拼音，字母大小写转换
-2. 将被-分隔开的单词进行连接（openutau不支持-连接单词分配元音）
+1. 自动添加AP，SP音素
+2. 汉字转换粤语拼音
+3. 字母大小写转换
+4. 将被-分隔开的单词进行连接（openutau不支持-连接单词分配元音）
 
 # OpenUtau
 ## Download
