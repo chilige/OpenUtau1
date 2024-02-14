@@ -18,23 +18,20 @@ kaa,k a a
 br,AP
 ```
 
-```
 注：
 1. DiffSinger Mandarin Rhythmizer Phonemizer 和 DiffSinger Mandarin DIY Rhythmizer Phonemizer的区别是：前者只能用Opencpop里面的音素表和rhy，后者可以使用自定义的中文字典`ds_CNM.txt`。
 2. 在两个有自定义词典的中文音素器中增加歌词后缀换词典解析功能。&2用二段中文解析，&3用三段中文解析，&j用日语解析。
 
-```
 ### 1.2 DiffSinger Dsdur Phonemizer系列音素器
 dsdur系列音素器适配多语种方案。dsdur可以放在歌手目录下使用，也可以放在dep目录下供无dsdur的歌手使用。dsdur系列音素器可以自定义每个语种使用的dsdur预测模型，为在Dependencies目录下的子目录：
 `dsdur_cnm | dsdur_cnm3 | dsdur_cny | dsdur_jp | dsdur_en | dsdur_ko`,
 所以目前音素器识别dsdur位置的顺序为：歌手目录下的dsdur，Dependencies下的dsdur_xx目录，Dependencies下的dsdur目录
 
-```
 注：
-这里提供colstone的multi-lang五语种词典对应的词典配置，包括Rhy和Dsdur系列音素器的，https://github.com/atonyxu/Multi-langs_Dictionary
-DiffSinger Mandarin Rhythmizer Phonemizer 和 DiffSinger Mandarin DIY Rhythmizer Phonemizer，可直接输入汉字，会自动转拼音。DiffSinger Cantonese Rhythmizer Phonemizer，可直接输入汉字（简体），会自动转粤语拼音。
-DiffSinger Japanese Rhythmizer Phonemizer，可直接输入假名，会自动转换罗马音，字典里面无需再申明假名转换。
-```
+1. 这里提供colstone的multi-lang五语种词典对应的词典配置，包括Rhy和Dsdur系列音素器的，https://github.com/atonyxu/Multi-langs_Dictionary
+2. DiffSinger Mandarin Rhythmizer/Dsdur Phonemizer 和 DiffSinger Mandarin DIY Rhythmizer/Dsdur Phonemizer，可直接输入汉字，会自动转拼音。
+3. DiffSinger Cantonese Rhythmizer/Dsdur Phonemizer，可直接输入汉字（简体），会自动转粤语拼音。
+4. DiffSinger Japanese Rhythmizer/Dsdur Phonemizer，可直接输入假名，会自动转换罗马音，字典里面无需再申明假名转换。
 
 ## 2. 批量功能
 1. 自动添加AP，SP音素
